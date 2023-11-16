@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Admin Panel</title>
+
+    <style>
+        .admin-header{
+            background:green;
+        }
+    </style>
+</head>
+
+<body>
+    {% comment %} modal code start {% endcomment %}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Do you really want to delete this record?</h5>
+        
+      </div>
+      {% comment %} <div class="modal-body">
+        ...
+      </div> {% endcomment %}
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancel</button>
+        <!-- <button type="button" class="btn btn-danger">Delete</button> -->
+        <a href="#" class="btn btn-danger confirm_del_btn">Delete</a>
+    </div>
+    </div>
+  </div>
+</div>
+    {% comment %} modal code end {% endcomment %}
+    <!-- admin header start -->
+    <header style="height: 60px; background-color: #333; color: #fff; padding: 10px;">
+        <div class="container">
+            <span style="font-size: 24px;">NIFM</span>
+            <a class="btn btn-primary mb-2 ms-3" href="{% url 'admin_home' %}">Admin Home</a>
+            <a class="btn btn-primary mb-2 ms-3" href="{% url 'upper_slider' %}">Upper Slider Images</a>
+            <a class="btn btn-primary mb-2 ms-3" href="{% url 'middle_slider' %}">Middle Slider Images</a>
+            <a class="btn btn-danger float-end ms-3" href="{% url 'admin_logout' %}">logout</a>
+            <a class="btn btn-success float-end" href="{% url 'add_image' %}?slider={{slider}}">Add {% if slider %} {{slider|title}} Slider{% endif %} Image</a>
+        </div>
+    </header>
+    <!-- admin header end -->
+
+    <div class="container mt-3">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Image Category</th>
+                    <th>Image</th>
+                    <th>Image View</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in images %}
+                <tr>
+                    <td>{{image.image_category}}</td>
+                    <!-- <td><img src="{{image.image.url}}" alt="" style="height: 100px; width: 100px;"></td> -->
+                    <td><a href="/media/{{image.image}}">{{image.image}}</a></td>
+                    <td><img src="{{image.image.url}}" alt="" height="100"></td>
+
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="{% url 'update_image' image.id %}?slider={{slider}}">Update</a>
+                        <input type="text" class="delete_url" style="display: none;" value="{% url 'delete_image' image.id %}?slider={{slider}}">
+                        <button class="btn btn-sm btn-danger delete_button" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+ 
+
+<!-- end html code     -->
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+    <script>
+$(document).ready(function(){
+  $(".delete_button").click(function(){
+    var url = $(this).siblings(".delete_url").val()
+    // console.log(url)
+    // alert(url)
+    $(".confirm_del_btn").attr("href", url)
+  });
+});
+</script>
+</body>
+
+</html>
